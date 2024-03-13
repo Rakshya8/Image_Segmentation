@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <a href="#home">Image Segmentation</a>
+      </div>
+
+    <div class="container">
+        <h1>Upload File</h1>
+        <form id="uploadForm" class="upload-form" method="POST" enctype="multipart/form-data" action="/upload">
+            <input type="file" id="fileInput" class="file-input" name="file" accept=".png, .jpg, .jpeg" required>
+            <label for="fileInput" class="file-label">Choose a file</label>
+            <button type="submit" class="upload-button">Upload</button>
+        </form>
+        <div id="imagePreview" class="image-preview"></div> <!-- Container for image preview -->
+        <div id="uploadMessage" class="upload-message"></div> <!-- Container for upload message -->
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+    
+    <script>
+        // Function to display image preview
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var imgElement = document.createElement("img");
+                imgElement.src = reader.result;
+                imgElement.style.maxWidth = "100%";
+                document.getElementById("imagePreview").innerHTML = ""; // Clear previous preview
+                document.getElementById("imagePreview").appendChild(imgElement);
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+        
+        // Add event listener to file input
+        document.getElementById("fileInput").addEventListener("change", previewImage);
+    </script>
+</body>
+</html>
